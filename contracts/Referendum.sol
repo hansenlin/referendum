@@ -72,19 +72,14 @@ contract Referendum {
     bytes memory proofOutputs = ace.validateProof(JOIN_SPLIT_PROOF, msg.sender, _proofdata);
     (bytes memory inputNotes, bytes memory outputNotes, ,) = proofOutputs.get(0).extractProofOutput();
 
-    // require(inputNotes.length == policy.noteHashes.length);
-    // for (uint i = 0; i < policy.noteHashes.length; i++) {
-    //   require(policy.aztecVotes[inputNotes[i]]);
-    // }
+    require(inputNotes.getLength() == policy.noteHashes.length);
+    for (uint i = 0; i < inputNotes.getLength(); i++) {
+      (, bytes32 noteHash, ) = inputNotes.get(i).extractNote();
+      require(policy.aztecVotes[noteHash], "note hashes are different");
+    }
 
-    // require(outputNotes.length == 1);
-
-
-    // proofOutputs = ace.validateProof(JOIN_SPLIT_PROOF, address(this), _proofdata2);
-    // (, outputNotes, ,) = proofOutputs.get(0).extractProofOutput();
-
+    require(outputNotes.getLength() == 1);
 
     //emit Poll
-
   }
 }

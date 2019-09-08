@@ -9,6 +9,7 @@ const Referendum = artifacts.require("./Referendum.sol");
 contract('Private Vote', accounts => {
 
   let referendumContract;
+  let originalNote;
   const owner = secp256k1.accountFromPrivateKey(process.env.GANACHE_TESTING_ACCOUNT_0);
   const sender = accounts[1];
 
@@ -22,7 +23,7 @@ contract('Private Vote', accounts => {
     await referendumContract.register.sendTransaction({ from: sender });
     await referendumContract.proposePolicy.sendTransaction("leave EU", { from: owner.address });
 
-    const originalNote = await note.create(owner.publicKey, 1);
+    originalNote = await note.create(owner.publicKey, 1);
     const utilityNote = await note.create(owner.publicKey, 1);
     const comparisonNote = await note.create(owner.publicKey, 0);
     
@@ -33,8 +34,6 @@ contract('Private Vote', accounts => {
   })
 
   it('compile results proof', async() => {
-
-    const originalNote = await note.create(owner.publicKey, 1)
 
     let sumValue = 1;
 
